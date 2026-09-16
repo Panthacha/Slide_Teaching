@@ -84,17 +84,11 @@
 
         /* Wallpaper Retro Bliss 8-bit Style */
         .pixel-wallpaper {
-            background: linear-gradient(to bottom, #3b82f6 0%, #60a5fa 55%, #22c55e 55%, #15803d 100%);
+            background-image: url('images_slide/bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             position: relative;
-        }
-
-        .pixel-wallpaper::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-image: radial-gradient(rgba(255, 255, 255, 0.15) 2px, transparent 0);
-            background-size: 12px 12px;
-            pointer-events: none;
         }
 
         /* Titlebar Gradient */
@@ -167,14 +161,10 @@
 </head>
 <body class="pixel-wallpaper h-screen w-screen flex flex-col justify-between overflow-hidden select-none">
 
-    <!-- Pixel Cloud Background Elements -->
-    <div class="pixel-cloud top-8 left-12"></div>
-    <div class="pixel-cloud top-20 right-24 scale-125"></div>
-    <div class="pixel-cloud top-12 left-1/2"></div>
     <!-- Retro Desktop Icons Container -->
     <div class="absolute top-4 left-4 flex flex-col gap-8 z-0 hidden md:flex">
         
-        <div class="desktop-icon flex flex-col items-center w-24 cursor-pointer p-1 rounded hover:bg-blue-900/40 text-white text-center" onclick="playBeep(); openMainWindow();">
+        <div class="desktop-icon flex flex-col items-center w-24 cursor-pointer p-1 rounded hover:bg-blue-900/40 text-white text-center" onclick="playBeep(); openFullScreenSlider();">
             <div class="w-14 h-14 bg-blue-500 border-2 border-black flex items-center justify-center font-bold text-white text-3xl mb-2 shadow-md">
                 📊
             </div>
@@ -321,556 +311,98 @@
         </div>
     </div>
 
+    <!-- FULLSCREEN IMAGE SLIDER -->
+    <div id="fullScreenSlider" class="hidden fixed inset-0 z-[100] bg-black flex items-center justify-center">
+        <!-- Close Button -->
+        <button onclick="closeFullScreenSlider()" class="absolute top-4 right-4 text-white text-3xl font-bold bg-white/20 w-12 h-12 rounded-full hover:bg-red-500 z-10 transition-colors flex items-center justify-center cursor-pointer border border-white/30 shadow-lg">✕</button>
+        
+        <!-- Navigation Buttons -->
+        <button onclick="prevFullSlide(event)" class="absolute left-4 text-white text-6xl font-bold bg-white/10 w-20 h-20 rounded-full hover:bg-white/30 z-10 select-none flex items-center justify-center pb-2 transition-colors cursor-pointer border border-white/20 shadow-lg">‹</button>
+        <button onclick="nextFullSlide(event)" class="absolute right-4 text-white text-6xl font-bold bg-white/10 w-20 h-20 rounded-full hover:bg-white/30 z-10 select-none flex items-center justify-center pb-2 transition-colors cursor-pointer border border-white/20 shadow-lg">›</button>
+        
+        <!-- Slide Progress -->
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/90 font-pixel-body text-lg bg-white/20 px-6 py-2 rounded-full z-10 font-bold border border-white/30 shadow-lg" id="fullSlideCounter">1 / 15</div>
+
+        <!-- Current Image -->
+        <img id="fullSlideImage" src="" class="max-w-[95vw] max-h-[95vh] object-contain transition-opacity duration-300" onclick="nextFullSlide(event)">
+    </div>
+
     <script>
         /* ==========================================================================
            SLIDE DATA ARRAY (12 SLIDES FULL CONTENT) - UPDATED TO INCLUDE COVER SLIDE
            ========================================================================== */
         const slidesData = [
-            // Slide 1
             {
                 id: 1,
-                section: "Phase 1: ปูพื้นฐาน (ทำไมต้องใช้เกม?)",
+                section: "",
                 title: "",
                 subtitle: "",
-                badge: "หน้าปกสไลด์",
-                content: `
-                    <div class="flex flex-col items-center justify-center h-full gap-6 text-center">
-                        <div class="text-7xl mb-2 animate-bounce flex gap-4">
-                            <span>🎮</span>
-                            <span>🌻</span>
-                            <span>🤖</span>
-                        </div>
-                        
-                        <div class="win-outset p-6 bg-blue-50 border-4 border-double border-blue-900 shadow-lg max-w-3xl w-full relative">
-                            <div class="absolute -top-4 -left-4 bg-yellow-400 border-2 border-black px-3 py-1 font-bold text-black font-pixel-heading text-xs transform -rotate-6">
-                                NEW 2026!
-                            </div>
-                            
-                            <h1 class="font-pixel-heading text-2xl sm:text-3xl text-blue-900 mb-6 leading-tight mt-4 text-shadow-sm">
-                                สร้างสรรค์เกมการศึกษาด้วย AI<br>
-                                <span class="text-xl sm:text-2xl text-emerald-700">(Gemini Canvas)</span><br>
-                                <span class="text-lg sm:text-xl text-rose-600 mt-2 block">- Math FarmVille Edition -</span>
-                            </h1>
-                            
-
-                        </div>
-
-                        <button onclick="nextSlide()" class="win-button mt-4 py-3 px-10 bg-green-500 text-white font-pixel-heading text-sm hover:bg-green-600 shadow-md">
-                            START WORKSHOP ▶
-                        </button>
-                    </div>
-                `
+                badge: "",
+                content: `<div class="w-full h-full flex items-center justify-center cursor-pointer" onclick="nextSlide()"><img src="images_slide/ChatGPT Image Sep 17, 2026, 01_25_06 AM (7).png" class="max-w-full max-h-full object-contain"></div>`
             },
-            // Slide 2
             {
                 id: 2,
-                section: "Phase 1: ปูพื้นฐาน (ทำไมต้องใช้เกม?)",
-                title: "📚 ทฤษฎีเกมการศึกษา (Educational Game Theory)",
-                subtitle: "ทำไมเราถึงควรนำเกมมาใช้ในการเรียนการสอน?",
-                badge: "THEORY",
-                content: `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center mt-2">
-                        <div class="flex flex-col gap-4">
-                            <div class="win-outset p-4 bg-emerald-50">
-                                <h3 class="font-pixel-heading text-emerald-900 text-sm mb-2">1. Gamification</h3>
-                                <p class="text-base text-gray-800 leading-relaxed">
-                                    การนำกลไกของเกม (Mechanics) เช่น กฎกติกา, การให้คะแนน, รางวัล, และความท้าทาย มาประยุกต์ใช้ในบริบทที่ไม่ใช่เกม (Non-game contexts) เพื่อสร้างแรงจูงใจ
-                                </p>
-                            </div>
-                            <div class="win-outset p-4 bg-blue-50">
-                                <h3 class="font-pixel-heading text-blue-900 text-sm mb-2">2. Active Learning</h3>
-                                <p class="text-base text-gray-800 leading-relaxed">
-                                    เกมเปลี่ยนผู้เรียนจากฝ่ายรับข้อมูล (Passive) เป็นผู้ลงมือกระทำ (Active) ต้องคิดวิเคราะห์และแก้ปัญหาตลอดเวลาเพื่อเอาชนะอุปสรรค
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="win-outset p-5 bg-white border-4 border-double border-gray-400 flex flex-col items-center justify-center text-center">
-                            <div class="text-6xl mb-4">🧠💡🎮</div>
-                            <h3 class="font-pixel-heading text-lg text-rose-700 mb-2">เป้าหมายสูงสุด</h3>
-                            <p class="text-lg text-gray-800 leading-relaxed font-bold">
-                                "ทำให้การเรียนรู้เป็นเรื่องสนุก น่าติดตาม และเกิดผลสัมฤทธิ์ทางการศึกษาโดยที่ผู้เรียนไม่รู้สึกว่าถูกบังคับให้เรียน"
-                            </p>
-                        </div>
-                    </div>
-                `
+                section: "",
+                title: "",
+                subtitle: "",
+                badge: "",
+                content: `<div class="w-full h-full flex items-center justify-center cursor-pointer" onclick="nextSlide()"><img src="images_slide/ChatGPT Image Sep 17, 2026, 01_25_06 AM (8).png" class="max-w-full max-h-full object-contain"></div>`
             },
-            // Slide 3
             {
                 id: 3,
-                section: "Phase 2: ตัวอย่างของจริง (Showcase: Math FarmVille)",
-                title: "🌾 ระบบฟาร์มแบบเรียลไทม์ (Real-time Growth)",
-                subtitle: "สร้างการรอคอยและการวางแผนด้วยระบบเวลาจริง",
-                badge: "MECHANIC 1",
-                content: `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center mt-2">
-                        <div class="flex flex-col justify-center gap-4">
-                            <div class="bg-blue-100 border-l-4 border-blue-800 p-4 rounded-r win-outset">
-                                <h3 class="font-pixel-heading text-blue-900 text-sm mb-2">⏱️ การเติบโตอิงเวลาจริง</h3>
-                                <p class="text-base leading-relaxed text-gray-800">
-                                    พืชในเกมนี้ไม่ได้โตด้วยการคลิกเฉยๆ แต่ต้องใช้เวลาจริงในการเติบโต (เช่น 10 วินาทีถึง 1 นาที) 
-                                    ผู้เล่นจึงต้องรู้จัก <strong>"การรอคอย"</strong> และกลับมาดูแลฟาร์มอย่างสม่ำเสมอ
-                                </p>
-                            </div>
-                            
-                            <div class="win-outset p-4 bg-emerald-50">
-                                <div class="flex items-center gap-3 text-emerald-800 font-bold text-lg mb-2">
-                                    <span class="text-2xl">🌱</span> <span>วงจรการเติบโต</span>
-                                </div>
-                                <div class="flex justify-between items-center text-3xl mt-4 px-4">
-                                    <span>🌱</span> <span class="text-sm">➡️</span>
-                                    <span>🌿</span> <span class="text-sm">➡️</span>
-                                    <span>🌳</span> <span class="text-sm">➡️</span>
-                                    <span>🍎</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Mockup Farm Overview -->
-                        <div class="win-outset p-2 bg-gray-200 flex flex-col items-center text-center">
-                            <div class="win-titlebar w-full text-white text-xs py-1 px-2 mb-2 font-pixel-heading">
-                                📸 ภาพจำลองหน้าจอหลัก
-                            </div>
-                            <div class="w-full relative bg-sky-200 win-inset overflow-hidden flex flex-col font-pixel-body">
-                                <div class="bg-gray-800 text-white p-1 px-2 flex justify-between text-xs z-10 relative">
-                                    <span>Lv.1</span><span>🪙 50</span><span>🌤️</span>
-                                </div>
-                                <div class="flex-1 grid grid-cols-2 grid-rows-2 gap-1 p-2 relative h-48">
-                                    <div class="bg-[#8b5a2b] border-2 border-[#5c3a18] flex items-center justify-center text-4xl">🌱</div>
-                                    <div class="bg-[#8b5a2b] border-2 border-[#5c3a18] flex items-center justify-center text-4xl">🌿</div>
-                                    <div class="bg-[#8b5a2b] border-2 border-[#5c3a18] flex items-center justify-center"></div>
-                                    <div class="bg-[#8b5a2b] border-2 border-[#5c3a18] flex items-center justify-center"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `
+                section: "",
+                title: "",
+                subtitle: "",
+                badge: "",
+                content: `<div class="w-full h-full flex items-center justify-center cursor-pointer" onclick="nextSlide()"><img src="images_slide/ChatGPT Image Sep 17, 2026, 01_25_07 AM (9).png" class="max-w-full max-h-full object-contain"></div>`
             },
-            // Slide 4
             {
                 id: 4,
-                section: "Phase 2: ตัวอย่างของจริง (Showcase: Math FarmVille)",
-                title: "🔢 บูรณาการคณิตศาสตร์ (Math Integration)",
-                subtitle: "เปลี่ยนการคลิกเมาส์น่าเบื่อ เป็นการฝึกสมองแก้โจทย์",
-                badge: "MECHANIC 2",
-                content: `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center mt-2">
-                        <!-- Mockup Math Popup -->
-                        <div class="win-outset p-2 bg-gray-200 flex flex-col items-center text-center order-2 md:order-1">
-                            <div class="win-titlebar w-full text-white text-xs py-1 px-2 mb-2 font-pixel-heading">
-                                📸 ภาพจำลองเมื่อเกิดเหตุการณ์
-                            </div>
-                            <div class="w-full relative bg-black win-inset overflow-hidden flex items-center justify-center h-48">
-                                <!-- Farm background blur -->
-                                <div class="absolute inset-0 bg-[#8b5a2b] opacity-40 grid grid-cols-2 gap-1 p-2">
-                                    <div class="border border-black"></div><div class="border border-black"></div>
-                                    <div class="border border-black flex justify-center items-center text-3xl">💧</div>
-                                </div>
-                                <!-- Popup Modal -->
-                                <div class="z-10 win-outset bg-gray-200 p-2 border-2 border-white max-w-[80%]">
-                                    <div class="bg-blue-800 text-white font-bold text-xs p-1 mb-2">แก้ปัญหา!</div>
-                                    <div class="text-sm font-bold text-black mb-2">พืชขาดน้ำ! (12 + 8 = ?)</div>
-                                    <div class="grid grid-cols-2 gap-1 text-xs">
-                                        <div class="win-button bg-gray-300 p-1 font-bold">18</div>
-                                        <div class="win-button bg-gray-300 p-1 font-bold">20</div>
-                                        <div class="win-button bg-gray-300 p-1 font-bold">22</div>
-                                        <div class="win-button bg-gray-300 p-1 font-bold">19</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="flex flex-col justify-center gap-4 order-1 md:order-2">
-                            <div class="bg-amber-100 border-l-4 border-amber-600 p-4 rounded-r win-outset">
-                                <h3 class="font-pixel-heading text-amber-900 text-sm mb-2">💡 ทำไมต้องตอบคำถาม?</h3>
-                                <p class="text-base leading-relaxed text-gray-800">
-                                    ผู้เล่นไม่สามารถรดน้ำ หรือกำจัดแมลงได้ฟรีๆ ทุกแอคชั่นสำคัญ <strong>"ต้องแลกมาด้วยความรู้"</strong> 
-                                    ทำให้ผู้เรียนยอมแก้โจทย์ซ้ำๆ เพื่อให้ฟาร์มของตนเองเติบโต
-                                </p>
-                            </div>
-                            
-                            <ul class="text-base leading-relaxed text-gray-800 list-disc list-inside space-y-2 mt-2">
-                                <li><strong>รดน้ำ (Watering):</strong> โจทย์บวก/ลบ พื้นฐาน</li>
-                                <li><strong>กำจัดแมลง (Pest Control):</strong> โจทย์ที่ยากขึ้น (เช่น คูณ/หาร)</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
+                section: "",
+                title: "",
+                subtitle: "",
+                badge: "",
+                content: `<div class="w-full h-full flex items-center justify-center cursor-pointer" onclick="nextSlide()"><img src="images_slide/ChatGPT Image Sep 17, 2026, 01_25_08 AM (10).png" class="max-w-full max-h-full object-contain"></div>`
             },
-            // Slide 5
             {
                 id: 5,
-                section: "Phase 2: ตัวอย่างของจริง (Showcase: Math FarmVille)",
-                title: "🌤️ ระบบเศรษฐกิจ & สภาพอากาศ (Economy & Weather)",
-                subtitle: "สร้างความท้าทายและเป้าหมายระยะยาวให้ผู้เล่น",
-                badge: "MECHANIC 3",
-                content: `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center mt-2">
-                        <div class="flex flex-col justify-center gap-4">
-                            <div class="win-outset p-4 bg-purple-50">
-                                <h3 class="font-pixel-heading text-purple-900 text-sm mb-2">💰 ระบบเศรษฐกิจ (Shop)</h3>
-                                <p class="text-base leading-relaxed text-gray-800">
-                                    เมื่อเก็บเกี่ยวผลผลิต ผู้เล่นจะได้รับเหรียญ (🪙) เพื่อนำไปซื้อเมล็ดพันธุ์ที่แพงขึ้น 
-                                    และให้ผลตอบแทนสูงขึ้น สร้างเป้าหมายในการเล่น (End-game goal)
-                                </p>
-                            </div>
-                            
-                            <div class="win-outset p-4 bg-sky-50">
-                                <h3 class="font-pixel-heading text-sky-900 text-sm mb-2">🌧️ สภาพอากาศแบบสุ่ม</h3>
-                                <ul class="text-base leading-relaxed text-gray-800 list-disc list-inside space-y-1">
-                                    <li><strong>ฝนตก (Rain):</strong> พืชโตเร็วขึ้น 2 เท่า ไม่ต้องรดน้ำ</li>
-                                    <li><strong>แดดจัด (Sun):</strong> พืชขาดน้ำเร็วขึ้น ต้องคอยเฝ้าระวัง</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- Mockup Shop -->
-                        <div class="win-outset p-2 bg-gray-200 flex flex-col items-center text-center">
-                            <div class="win-titlebar w-full text-white text-xs py-1 px-2 mb-2 font-pixel-heading">
-                                📸 ภาพจำลองระบบร้านค้า
-                            </div>
-                            <div class="w-full relative bg-white win-inset overflow-hidden flex flex-col font-pixel-body h-48 p-2">
-                                <div class="text-center font-bold text-lg mb-2 border-b-2 border-black pb-1">🛒 ร้านค้า (SHOP)</div>
-                                <div class="flex justify-between items-center bg-gray-100 p-2 border-2 border-gray-400 mb-2">
-                                    <div class="text-2xl">🌱</div>
-                                    <div class="text-left flex-1 px-2">
-                                        <div class="font-bold text-sm">เมล็ดผักกาด (Lv.1)</div>
-                                        <div class="text-xs text-green-700">โตไว ราคาถูก</div>
-                                    </div>
-                                    <div class="win-button bg-yellow-200 px-2 py-1 font-bold text-xs">🪙 10</div>
-                                </div>
-                                <div class="flex justify-between items-center bg-gray-100 p-2 border-2 border-gray-400">
-                                    <div class="text-2xl">🍎</div>
-                                    <div class="text-left flex-1 px-2">
-                                        <div class="font-bold text-sm">ต้นแอปเปิล (Lv.5)</div>
-                                        <div class="text-xs text-red-700">โตช้า กำไรสูง</div>
-                                    </div>
-                                    <div class="win-button bg-yellow-200 px-2 py-1 font-bold text-xs">🪙 100</div>
-                                </div>
-                            </div>
-                            <button onclick="playBeep(); window.open('https://panthacha.github.io/math-farmville/', '_blank');" class="win-button w-full py-1.5 mt-2 font-bold text-xs bg-emerald-500 text-white hover:bg-emerald-600 flex items-center justify-center gap-1 shadow-md">
-                                ▶️ เปิดเล่นเกมตัวเต็ม (แท็บใหม่)
-                            </button>
-                        </div>
-                    </div>
-                `
+                section: "",
+                title: "",
+                subtitle: "",
+                badge: "",
+                content: `<div class="w-full h-full flex items-center justify-center cursor-pointer" onclick="nextSlide()"><img src="images_slide/ChatGPT Image Sep 17, 2026, 01_25_08 AM (11).png" class="max-w-full max-h-full object-contain"></div>`
             },
-            // Slide 6
             {
                 id: 6,
-                section: "Phase 2: ตัวอย่างของจริง (Showcase: Math FarmVille)",
-                title: "❓ โยนคำถามกระตุ้นความคิด (Interactive Question)",
-                subtitle: "ชวนผู้เข้าอบรมร่วมออกแบบไอเดียเกมในบริบทของตนเอง",
-                badge: "INTERACTIVE",
-                content: `
-                    <div class="flex flex-col h-full justify-between gap-4">
-                        <div class="win-outset p-4 bg-yellow-50 border-2 border-yellow-400 mt-2">
-                            <p class="font-pixel-heading text-red-700 text-xs sm:text-sm mb-3">💬 คำถามชวนคิด:</p>
-                            <blockquote class="text-xl sm:text-2xl font-bold text-blue-950 leading-snug text-center py-4">
-                                "ถ้าผู้เข้าอบรมจะนำโครงสร้างเกมแบบนี้ไปปรับใช้กับวิชาของตัวเอง จะเปลี่ยนเนื้อหาคณิตศาสตร์เป็นวิชาอะไร? และเปลี่ยนอุปสรรคจาก 'หนอนกินผัก' เป็นอะไรดีครับ/คะ?"
-                            </blockquote>
-                        </div>
-
-                        <!-- Interactive Input Generator Tool -->
-                        <div class="win-outset p-4 bg-slate-100 flex flex-col gap-3">
-                            <div class="font-pixel-heading text-xs text-gray-700">🧪 ทดลองแปลงร่างเกมของคุณ:</div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-sm font-bold mb-1">1. เปลี่ยนเป็นวิชาอะไรดี:</label>
-                                    <input type="text" id="subjectInput" placeholder="เช่น ภาษาไทย, วิทยาศาสตร์" class="w-full p-2 win-inset text-base">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-bold mb-1">2. อุปสรรคใหม่คืออะไร:</label>
-                                    <input type="text" id="obstacleInput" placeholder="เช่น พายุ, สะกดคำผิด, เอเลี่ยน" class="w-full p-2 win-inset text-base">
-                                </div>
-                            </div>
-                            <button onclick="generateGameIdea()" class="win-button py-2 bg-emerald-600 text-white font-bold text-base hover:bg-emerald-700">
-                                ✨ กดเพื่อจำลองแนวคิดเกมใหม่
-                            </button>
-                        </div>
-
-                        <div id="ideaResult" class="win-inset p-3 bg-white text-blue-900 font-bold hidden text-lg border-l-4 border-emerald-500">
-                        </div>
-                    </div>
-                `
+                section: "",
+                title: "",
+                subtitle: "",
+                badge: "",
+                content: `<div class="w-full h-full flex items-center justify-center cursor-pointer" onclick="nextSlide()"><img src="images_slide/ChatGPT Image Sep 17, 2026, 01_25_09 AM (12).png" class="max-w-full max-h-full object-contain"></div>`
             },
-            // Slide 7
             {
                 id: 7,
-                section: "Phase 3: เบื้องหลังการทำงาน (Behind the Scenes)",
-                title: "💻 โครงสร้างโค้ดของโปรเจกต์เรา (Tech Stack)",
-                subtitle: "ไม่ได้ใช้ Engine ยักษ์ใหญ่ ใช้แค่ภาษาเว็บพื้นฐาน 3 ทหารเสือ!",
-                badge: "ARCHITECTURE",
-                content: `
-                    <div class="flex flex-col gap-4 h-full justify-center">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                            <div class="win-outset p-4 bg-red-50 text-center flex flex-col items-center">
-                                <div class="text-5xl mb-2">📄</div>
-                                <h4 class="font-pixel-heading text-red-900 text-sm mb-2">index.html (โครงสร้าง)</h4>
-                                <p class="text-sm text-gray-700">แบ่งหน้าจอเป็นส่วนๆ เช่น แถบสถานะ แถบสภาพอากาศ แปลงดิน 16 ช่อง และป๊อปอัปโจทย์เลข</p>
-                            </div>
-                            <div class="win-outset p-4 bg-blue-50 text-center flex flex-col items-center">
-                                <div class="text-5xl mb-2">🎨</div>
-                                <h4 class="font-pixel-heading text-blue-900 text-sm mb-2">style.css (ความงาม)</h4>
-                                <p class="text-sm text-gray-700">ใช้ <strong>Vanilla CSS</strong> คุมโทนสี จัด Layout ด้วย Grid และใส่ CSS Animations สวยๆ ตอนโจทย์เด้ง</p>
-                            </div>
-                            <div class="win-outset p-4 bg-yellow-50 text-center flex flex-col items-center">
-                                <div class="text-5xl mb-2">🧠</div>
-                                <h4 class="font-pixel-heading text-yellow-900 text-sm mb-2">game.js (สมองตรรกะ)</h4>
-                                <p class="text-sm text-gray-700">เป็นหัวใจหลัก คอยเช็คว่าพืชโตหรือยัง เช็คคำตอบคณิตศาสตร์ และสุ่มสภาพอากาศ</p>
-                            </div>
-                        </div>
-                    </div>
-                `
+                section: "",
+                title: "",
+                subtitle: "",
+                badge: "",
+                content: `<div class="w-full h-full flex items-center justify-center cursor-pointer" onclick="nextSlide()"><img src="images_slide/ChatGPT Image Sep 17, 2026, 01_25_10 AM (13).png" class="max-w-full max-h-full object-contain"></div>`
             },
-            // Slide 8
             {
                 id: 8,
-                section: "Phase 3: เบื้องหลังการทำงาน (Behind the Scenes)",
-                title: "⏳ ทำไมพืชโตต่อได้แม้ปิดเบราว์เซอร์?",
-                subtitle: "เคล็ดลับระบบเวลา (Time-based Progression) ที่ AI เขียนให้",
-                badge: "CORE TECH",
-                content: `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center px-4">
-                        <div class="win-outset p-5 bg-white border-4 border-gray-400 shadow-md">
-                            <h4 class="font-pixel-heading text-blue-900 text-sm mb-3">🕒 เทคนิค Date.now()</h4>
-                            <p class="text-base text-gray-800 mb-4 leading-relaxed">
-                                เกมไม่ได้นับ 1..2..3.. ไปเรื่อยๆ แต่ใช้วิธี <strong>จดเวลาปลูกเอาไว้</strong><br>
-                                <span class="text-sm text-gray-500">เช่น ปลูกตอน 10:00 น. บันทึกค่าลงไปในระบบ</span>
-                            </p>
-                            
-                            <h4 class="font-pixel-heading text-red-900 text-sm mb-3 mt-6">⏱️ ฟังก์ชัน setInterval()</h4>
-                            <p class="text-base text-gray-800 leading-relaxed">
-                                เปรียบเสมือน <strong>Game Loop</strong> ให้ระบบตื่นมาเช็คทุกๆ 1 วินาที ว่าเวลาผ่านไปจากตอนปลูกเท่าไหร่แล้ว ทำให้พืชโตแม่นยำแม้คอมกระตุก!
-                            </p>
-                        </div>
-
-                        <div class="win-inset p-4 bg-black flex flex-col items-center justify-center text-green-400 font-mono text-sm leading-loose">
-                            <div><span class="text-purple-400">let</span> plantTime = <span class="text-yellow-300">Date.now()</span>;</div>
-                            <div>...</div>
-                            <div><span class="text-purple-400">setInterval</span>(() => {</div>
-                            <div class="ml-4"><span class="text-purple-400">let</span> now = <span class="text-yellow-300">Date.now()</span>;</div>
-                            <div class="ml-4"><span class="text-purple-400">let</span> passed = now - plantTime;</div>
-                            <div class="ml-4"><span class="text-purple-400">if</span> (passed > <span class="text-orange-400">5000</span>) grow();</div>
-                            <div>}, <span class="text-orange-400">1000</span>);</div>
-                        </div>
-                    </div>
-                `
+                section: "",
+                title: "",
+                subtitle: "",
+                badge: "",
+                content: `<div class="w-full h-full flex items-center justify-center cursor-pointer" onclick="nextSlide()"><img src="images_slide/ChatGPT Image Sep 17, 2026, 01_25_10 AM (14).png" class="max-w-full max-h-full object-contain"></div>`
             },
-            // Slide 9
             {
                 id: 9,
-                section: "Phase 3: เบื้องหลังการทำงาน (Behind the Scenes)",
-                title: "🎨 ดีไซน์เกมน่ารักโดยไม่ต้องวาดรูป (Emoji Power)",
-                subtitle: "ทำไมถึงไม่ใช้ไฟล์รูปภาพ (.png, .jpg) เลยแม้แต่ไฟล์เดียว?",
-                badge: "GRAPHICS",
-                content: `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
-                        <div class="win-outset p-5 bg-emerald-50 h-full flex flex-col justify-center text-center">
-                            <div class="text-6xl mb-4 space-x-2">
-                                <span>🍅</span><span>🌽</span><span>🐔</span><span>🐛</span>
-                            </div>
-                            <h3 class="font-pixel-heading text-emerald-900 text-lg mb-2">เราใช้ EMOJI ทั้งหมด!</h3>
-                            <p class="text-base text-gray-700">เปลี่ยนฟอนต์ขนาดใหญ่ ใส่เงา และเพิ่มแอนิเมชัน CSS</p>
-                        </div>
-
-                        <div class="flex flex-col gap-3">
-                            <div class="win-outset p-3 bg-white border-l-4 border-green-500">
-                                <strong class="text-green-800 block mb-1">✅ โหลดเร็วทะลุขีดจำกัด</strong>
-                                <span class="text-sm">ไม่ต้องรอโหลดไฟล์ภาพ เกมเบามาก เปิดปุ๊บติดปั๊บ</span>
-                            </div>
-                            <div class="win-outset p-3 bg-white border-l-4 border-blue-500">
-                                <strong class="text-blue-800 block mb-1">✅ โค้ดสะอาดมาก</strong>
-                                <span class="text-sm">เพียงแค่ใส่ <code>&lt;div&gt;🐓&lt;/div&gt;</code> ก็ได้ไก่มาร้องในฟาร์มแล้ว</span>
-                            </div>
-                            <div class="win-outset p-3 bg-white border-l-4 border-purple-500">
-                                <strong class="text-purple-800 block mb-1">✅ AI เขียนง่าย ไม่พึ่งทรัพยากรภายนอก</strong>
-                                <span class="text-sm">AI สามารถช่วยเขียนโค้ดและเลือกกราฟิกให้เราได้ตรงใจโดยไม่ต้องไปหาโหลดรูปภาพเอง หรือติดลิขสิทธิ์</span>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-                        // Slide 11 (New): Prompt Framework
-            {
-                id: 10,
-                section: "Phase 4: ลงมือปฏิบัติจริง (Workshop)",
-                title: "สูตรลับการเขียน Prompt ที่ดี (The Prompt Framework)",
-                subtitle: "4 เสาหลักในการสื่อสารกับ AI ให้ได้ผลลัพธ์ดั่งใจ",
-                badge: "FRAMEWORK",
-                content: `
-                    <div class="flex flex-col h-full gap-3 mt-2">
-                        <div class="grid grid-cols-4 gap-3">
-                            <div class="bg-indigo-100 py-4 px-2 text-center text-lg sm:text-xl font-bold win-outset border-t-4 border-indigo-500">👤 1. บทบาท</div>
-                            <div class="bg-emerald-100 py-4 px-2 text-center text-lg sm:text-xl font-bold win-outset border-t-4 border-emerald-500">🎯 2. ภารกิจ</div>
-                            <div class="bg-rose-100 py-4 px-2 text-center text-lg sm:text-xl font-bold win-outset border-t-4 border-rose-500">🛑 3. ข้อจำกัด</div>
-                            <div class="bg-amber-100 py-4 px-2 text-center text-lg sm:text-xl font-bold win-outset border-t-4 border-amber-500">🎨 4. รูปแบบ</div>
-                        </div>
-
-                        <div class="win-outset p-3 bg-yellow-50 border-2 border-dashed border-gray-400 mt-2">
-                            <h3 class="font-pixel-heading text-lg text-yellow-900 mb-1">📝 ตัวอย่างแม่แบบ (Prompt Template) นำไปปรับใช้ได้เลย</h3>
-                            <p class="text-sm text-gray-700">การประยุกต์ใช้ 4 เสาหลัก สร้างคำสั่งครอบจักรวาลที่คุณนำไปเติมคำได้เลย</p>
-                        </div>
-                        
-                        <div class="win-inset p-5 bg-white font-pixel-body text-lg sm:text-xl leading-relaxed overflow-y-auto flex-1 text-gray-800 space-y-4">
-                            <p>
-                                <strong class="text-indigo-700">[1. Role]:</strong> คุณคือผู้เชี่ยวชาญด้าน <span class="text-red-600 font-bold bg-red-50 px-2 py-1 border border-red-200">[การสร้างเกมการศึกษา...]</span>
-                                <span class="block text-sm text-gray-600 bg-gray-100 px-2 py-1 mt-1 rounded border-l-2 border-indigo-400">💡 <b>ทำไมต้องใส่?:</b> เพื่อตีกรอบให้ AI ดึงเฉพาะ "ชุดความรู้" และ "น้ำเสียง" ของผู้เชี่ยวชาญมาตอบ</span>
-                            </p>
-                            <p>
-                                <strong class="text-emerald-700">[2. Task]:</strong> ฉันอยากให้คุณสร้างมินิเกมบนเว็บ 1 ไฟล์ เพื่อสอนนักเรียนเรื่อง <span class="text-blue-600 font-bold bg-blue-50 px-2 py-1 border border-blue-200">[เนื้อหาวิชา เช่น การบวกเลข...]</span>
-                                <span class="block text-sm text-gray-600 bg-gray-100 px-2 py-1 mt-1 rounded border-l-2 border-emerald-400">💡 <b>ทำไมต้อง 1 ไฟล์?:</b> บังคับให้งานชิ้นเล็ก ก๊อปไปใช้ได้ทันที ไม่ซับซ้อนเกินไปจนเอาไปใช้ต่อไม่เป็น</span>
-                            </p>
-                            <p>
-                                <strong class="text-rose-700">[3. Constraints]:</strong> โดยให้เกมมีธีมคือ <span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-1 border border-emerald-200">[เช่น ปลูกผัก...]</span> มีอุปสรรคคือ <span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-1 border border-emerald-200">[มอนสเตอร์...]</span>
-                                <span class="block text-sm text-gray-600 bg-gray-100 px-2 py-1 mt-1 rounded border-l-2 border-rose-400">💡 <b>ทำไมต้องมีข้อจำกัด?:</b> บังคับให้เกมมีเป้าหมายชัดเจน ป้องกัน AI ออกทะเลไปทำเกมแนวอื่นที่เราไม่ได้อยากได้</span>
-                            </p>
-                            <p>
-                                <strong class="text-amber-700">[4. Format]:</strong> โค้ดทั้งหมดต้องรวมอยู่ในไฟล์เดียว ห้ามใช้รูปภาพภายนอก ให้ใช้ Emoji แทน และตกแต่ง UI ให้สวยงามดึงดูดใจ
-                                <span class="block text-sm text-gray-600 bg-gray-100 px-2 py-1 mt-1 rounded border-l-2 border-amber-400">💡 <b>ทำไมห้ามใช้รูปภาพ?:</b> ป้องกันภาพแตกหรือภาพไม่แสดงผล (Zero-dependency) ทำให้โค้ดรันติด 100% บนทุกเครื่อง</span>
-                            </p>
-                        </div>
-                    </div>
-                `
-            },
-// Slide 11
-            {
-                id: 11,
-                section: "Phase 4: ลงมือปฏิบัติจริง (Workshop)",
-                title: "🧩 แกะรอย Prompt: สั่ง AI อย่างไรให้ได้เกมนี้?",
-                subtitle: "ถอดรหัสคำสั่ง (Prompt) ที่ใช้สร้าง Math FarmVille",
-                badge: "PROMPT DESIGN",
-                content: `
-                    <div class="flex flex-col gap-4 h-full mt-2">
-                        <div class="win-outset p-4 bg-slate-50 border-2 border-indigo-200">
-                            <h3 class="font-pixel-heading text-indigo-900 text-sm mb-3">โครงสร้าง Prompt ที่ดี (The Perfect Recipe):</h3>
-                            <ul class="space-y-3">
-                                <li class="flex gap-3 items-start bg-blue-100 p-2 win-inset">
-                                    <span class="text-xl">👤</span>
-                                    <div>
-                                        <strong class="text-black text-lg font-pixel-heading text-xs block mb-1">1. Role (กำหนดบทบาท):</strong> 
-                                        <span class="text-gray-800 text-base">"จงทำหน้าที่เป็นโปรแกรมเมอร์เชี่ยวชาญการสร้างเกมการศึกษาบนเว็บ..."</span>
-                                    </div>
-                                </li>
-                                <li class="flex gap-3 items-start bg-emerald-100 p-2 win-inset">
-                                    <span class="text-xl">⚙️</span>
-                                    <div>
-                                        <strong class="text-black text-lg font-pixel-heading text-xs block mb-1">2. Mechanics (กำหนดกลไก):</strong> 
-                                        <span class="text-gray-800 text-base">"สร้างเกมปลูกผักที่อิงเวลาจริง ผู้เล่นต้องรดน้ำพืชโดยการแก้โจทย์คณิตศาสตร์ หากไม่รดน้ำพืชจะตาย..."</span>
-                                    </div>
-                                </li>
-                                <li class="flex gap-3 items-start bg-rose-100 p-2 win-inset">
-                                    <span class="text-xl">🛑</span>
-                                    <div>
-                                        <strong class="text-black text-lg font-pixel-heading text-xs block mb-1">3. Constraints (ข้อจำกัดทางเทคนิค):</strong> 
-                                        <span class="text-gray-800 text-base">"เขียนโค้ดทั้งหมด (HTML, CSS, JS) รวมอยู่ในไฟล์เดียว ห้ามใช้รูปภาพภายนอก ให้ใช้ Emoji เป็นกราฟิกแทน"</span>
-                                    </div>
-                                </li>
-                                <li class="flex gap-3 items-start bg-amber-100 p-2 win-inset">
-                                    <span class="text-xl">🎨</span>
-                                    <div>
-                                        <strong class="text-black text-lg font-pixel-heading text-xs block mb-1">4. Aesthetics (ความสวยงาม/ธีม):</strong> 
-                                        <span class="text-gray-800 text-base">"ออกแบบ UI ให้เป็นสไตล์ Windows 95 แบบ Retro มีหน้าต่างซ้อนกันได้..."</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            },
-            // Slide 12
-            {
-                id: 12,
-                section: "Phase 4: ลงมือปฏิบัติจริง (Workshop)",
-                title: "📝 แจกใบงาน Prompt สู่การปฏิบัติจริง",
-                subtitle: "ถึงเวลาจินตนาการ และสร้างเกมในเวอร์ชันของคุณเอง!",
-                badge: "WORKSHOP 1",
-                content: `
-                    <div class="flex flex-col h-full items-center justify-center gap-6">
-                        <div class="win-outset p-6 bg-yellow-50 max-w-2xl text-center border-2 border-dashed border-gray-400">
-                            <div class="text-5xl mb-4">📄</div>
-                            <h3 class="font-pixel-heading text-xl text-yellow-900 mb-2">เปิดไฟล์ใบงาน (Worksheet)</h3>
-                            <p class="text-base text-gray-800 mb-4">
-                                ให้ผู้เข้าอบรมเปิดไฟล์ Word ที่เตรียมไว้ให้ และเติมไอเดียลงใน <strong>[ช่องว่างสีแดง]</strong> เพื่อปรับแต่งเกมในเวอร์ชันของตนเอง
-                            </p>
-                            <div class="win-inset p-2 bg-white text-sm text-red-600 font-bold inline-block mx-auto">
-                                [เปลี่ยนวิชา] • [เปลี่ยนธีมเกม] • [เปลี่ยนอุปสรรค]
-                            </div>
-                        </div>
-                        
-                        <div class="text-lg font-bold text-blue-900 animate-pulse">
-                            เมื่อเติมคำในช่องว่างเสร็จแล้ว ➔ ก๊อปปี้ข้อความทั้งหมดเตรียมไว้!
-                        </div>
-                    </div>
-                `
-            },
-            // Slide 13
-            {
-                id: 13,
-                section: "Phase 4: ลงมือปฏิบัติจริง (Workshop)",
-                title: "✨ ขั้นตอนการสร้างด้วย Gemini Canvas",
-                subtitle: "นำ Prompt ที่สมบูรณ์ไปให้ AI เนรมิตโค้ด",
-                badge: "WORKSHOP 2",
-                content: `
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 h-full items-center">
-                        <div class="win-outset p-4 text-center bg-blue-50 h-48 flex flex-col justify-center relative">
-                            <div class="absolute top-0 left-0 bg-blue-600 text-white w-6 h-6 flex items-center justify-center font-bold">1</div>
-                            <div class="text-4xl mb-2">📋</div>
-                            <div class="font-bold text-gray-800">คัดลอก Prompt</div>
-                            <p class="text-xs mt-2">จากใบงานที่คุณเติมคำเสร็จสมบูรณ์แล้ว</p>
-                        </div>
-                        
-                        <div class="win-outset p-4 text-center bg-purple-50 h-48 flex flex-col justify-center relative">
-                            <div class="absolute top-0 left-0 bg-purple-600 text-white w-6 h-6 flex items-center justify-center font-bold">2</div>
-                            <div class="text-4xl mb-2">🤖</div>
-                            <div class="font-bold text-gray-800">วางใน Gemini</div>
-                            <p class="text-xs mt-2">เปิด Gemini Canvas พิมพ์วางลงไป แล้วรอมันประมวลผล</p>
-                        </div>
-                        
-                        <div class="win-outset p-4 text-center bg-green-50 h-48 flex flex-col justify-center relative">
-                            <div class="absolute top-0 left-0 bg-green-600 text-white w-6 h-6 flex items-center justify-center font-bold">3</div>
-                            <div class="text-4xl mb-2">🎮</div>
-                            <div class="font-bold text-gray-800">รันโค้ดและทดสอบ</div>
-                            <p class="text-xs mt-2">หน้าต่าง Preview จะขึ้นมา ให้กดเล่นและทดสอบระบบโจทย์ได้เลย!</p>
-                        </div>
-                    </div>
-                `
-            },
-            // Slide 14
-            {
-                id: 14,
-                section: "Phase 4: ลงมือปฏิบัติจริง (Workshop)",
-                title: "🔧 วิธีรับมือเมื่อ AI งอแง (Troubleshooting)",
-                subtitle: "ปัญหาเกิดขึ้นได้เสมอ แค่รู้วิธีคุยให้ AI แก้ให้!",
-                badge: "PRO TIP 2",
-                content: `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full items-center">
-                        <div class="win-outset p-4 bg-red-50 border-2 border-red-300">
-                            <h3 class="font-pixel-heading text-red-900 text-sm mb-3">⚠️ ปัญหาที่พบบ่อย</h3>
-                            <ul class="list-disc list-inside text-base text-gray-800 space-y-2">
-                                <li>โค้ดรันแล้วหน้าจอขาว</li>
-                                <li>ปุ่มรดน้ำกดไม่ได้</li>
-                                <li>รูป Emoji ไม่ยอมเปลี่ยนตอนผักโต</li>
-                            </ul>
-                        </div>
-
-                        <div class="win-outset p-4 bg-emerald-50 border-2 border-emerald-300 relative">
-                            <div class="absolute -top-3 -left-3 bg-yellow-400 text-black px-2 py-1 font-bold text-xs border-2 border-black rotate-[-5deg]">วิธีแก้ (อย่าตกใจ!)</div>
-                            <ol class="list-decimal list-inside text-base text-gray-800 space-y-3 mt-3">
-                                <li><strong>ก๊อปปี้ข้อความ Error</strong> หรือบอกอาการตรงๆ เช่น "กดปุ่มรดน้ำแล้ว pop-up ไม่ขึ้น"</li>
-                                <li><strong>พิมพ์บอก AI ไปตรงๆ</strong> ในช่องแชทเดิม</li>
-                                <li>AI จะทำการตรวจสอบ และ <strong>"แก้ไขโค้ดใหม่ให้ทันที!"</strong></li>
-                            </ol>
-                            <p class="text-xs text-emerald-800 font-bold mt-3 text-center">💡 "เราคือผู้บริหาร AI คือโปรแกรมเมอร์ ให้โปรแกรมเมอร์แก้ให้"</p>
-                        </div>
-                        
-                        <div class="md:col-span-2 text-center mt-2">
-                            <button onclick="triggerWin95Celebration()" class="win-button py-3 px-8 bg-blue-600 text-white font-pixel-heading text-sm hover:bg-blue-700 active:translate-y-0.5">
-                                🎉 จบการนำเสนอ (คลิกเพื่อจุดพลุ) 🎉
-                            </button>
-                        </div>
-                    </div>
-                `
+                section: "",
+                title: "",
+                subtitle: "",
+                badge: "",
+                content: `<div class="w-full h-full flex items-center justify-center cursor-pointer" onclick="nextSlide()"><img src="images_slide/ChatGPT Image Sep 17, 2026, 01_25_11 AM (15).png" class="max-w-full max-h-full object-contain"></div>`
             }
         ];
 
@@ -1011,9 +543,91 @@
         };
 
         /* ==========================================================================
+           FULLSCREEN SLIDER LOGIC
+           ========================================================================== */
+        const fullSlidesData = [
+            "images_slide/ChatGPT Image Sep 17, 2026, 01_25_01 AM (1).png",
+            "images_slide/ChatGPT Image Sep 17, 2026, 01_25_02 AM (2).png",
+            "images_slide/ChatGPT Image Sep 17, 2026, 01_25_03 AM (3).png",
+            "images_slide/ChatGPT Image Sep 17, 2026, 01_25_03 AM (4).png",
+            "images_slide/ChatGPT Image Sep 17, 2026, 01_25_04 AM (5).png",
+            "images_slide/ChatGPT Image Sep 17, 2026, 01_25_05 AM (6).png",
+            "images_slide/ChatGPT Image Sep 17, 2026, 01_25_06 AM (7).png",
+            "images_slide/ChatGPT Image Sep 17, 2026, 01_25_06 AM (8).png",
+            "images_slide/ChatGPT Image Sep 17, 2026, 01_25_07 AM (9).png",
+            "images_slide/ChatGPT Image Sep 17, 2026, 01_25_08 AM (10).png",
+            "images_slide/ChatGPT Image Sep 17, 2026, 01_25_08 AM (11).png",
+            "images_slide/ChatGPT Image Sep 17, 2026, 01_25_09 AM (12).png",
+            "images_slide/ChatGPT Image Sep 17, 2026, 01_25_10 AM (13).png",
+            "images_slide/ChatGPT Image Sep 17, 2026, 01_25_10 AM (14).png",
+            "images_slide/ChatGPT Image Sep 17, 2026, 01_25_11 AM (15).png"
+        ];
+        
+        let currentFullSlide = 0;
+
+        window.openFullScreenSlider = function(index = 0) {
+            document.getElementById('fullScreenSlider').classList.remove('hidden');
+            currentFullSlide = index;
+            renderFullSlide();
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(e => console.log(e));
+            }
+            // Close start menu if open
+            const startMenu = document.getElementById('startMenu');
+            if (startMenu) startMenu.classList.add('hidden');
+        };
+
+        window.closeFullScreenSlider = function() {
+            document.getElementById('fullScreenSlider').classList.add('hidden');
+            if (document.fullscreenElement && document.exitFullscreen) {
+                document.exitFullscreen().catch(e => console.log(e));
+            }
+        };
+
+        window.renderFullSlide = function() {
+            const img = document.getElementById('fullSlideImage');
+            img.style.opacity = 0;
+            setTimeout(() => {
+                img.src = fullSlidesData[currentFullSlide];
+                img.onload = () => { img.style.opacity = 1; };
+            }, 50);
+            document.getElementById('fullSlideCounter').innerText = `${currentFullSlide + 1} / ${fullSlidesData.length}`;
+        };
+
+        window.nextFullSlide = function(e) {
+            if (e) e.stopPropagation();
+            if (currentFullSlide < fullSlidesData.length - 1) {
+                currentFullSlide++;
+                renderFullSlide();
+                playBeep(600, 'square', 0.05);
+            }
+        };
+
+        window.prevFullSlide = function(e) {
+            if (e) e.stopPropagation();
+            if (currentFullSlide > 0) {
+                currentFullSlide--;
+                renderFullSlide();
+                playBeep(400, 'square', 0.05);
+            }
+        };
+
+        /* ==========================================================================
            KEYBOARD CONTROLS & EVENT LISTENERS
            ========================================================================== */
         document.addEventListener('keydown', (e) => {
+            const fullSlider = document.getElementById('fullScreenSlider');
+            if (fullSlider && !fullSlider.classList.contains('hidden')) {
+                if (e.key === 'ArrowRight' || e.key === 'Space') {
+                    nextFullSlide();
+                } else if (e.key === 'ArrowLeft') {
+                    prevFullSlide();
+                } else if (e.key === 'Escape') {
+                    closeFullScreenSlider();
+                }
+                return;
+            }
+
             if (e.key === 'ArrowRight' || e.key === 'Space') {
                 nextSlide();
             } else if (e.key === 'ArrowLeft') {
@@ -1091,11 +705,14 @@
         function buildStartMenu() {
             const listContainer = document.getElementById('startMenuList');
             listContainer.innerHTML = '';
-            slidesData.forEach((slide, index) => {
+            fullSlidesData.forEach((slide, index) => {
                 const item = document.createElement('div');
                 item.className = "p-1.5 hover:bg-blue-800 hover:text-white cursor-pointer flex items-center gap-2 rounded-xs";
-                item.innerHTML = `<span class="font-bold text-xs">${index + 1}.</span> <span class="truncate">${slide.title ? slide.title.replace(/<[^>]*>?/gm, '') : 'Cover Page'}</span>`;
-                item.onclick = () => goToSlide(index);
+                item.innerHTML = `<span class="font-bold text-xs">${index + 1}.</span> <span class="truncate">Slide ${index + 1}</span>`;
+                item.onclick = () => {
+                    playChime();
+                    openFullScreenSlider(index);
+                };
                 listContainer.appendChild(item);
             });
         }
