@@ -324,7 +324,10 @@
         <div class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/90 font-pixel-body text-lg bg-white/20 px-6 py-2 rounded-full z-10 font-bold border border-white/30 shadow-lg" id="fullSlideCounter">1 / 15</div>
 
         <!-- Current Image -->
-        <img id="fullSlideImage" src="" class="max-w-[95vw] max-h-[95vh] object-contain transition-opacity duration-300" onclick="nextFullSlide(event)">
+        <div class="absolute inset-0 flex items-center justify-center z-0">
+            <span class="text-white font-pixel-body text-2xl animate-pulse">Loading...</span>
+        </div>
+        <img id="fullSlideImage" src="" class="w-full h-full object-contain transition-opacity duration-300 relative z-10" onclick="nextFullSlide(event)">
     </div>
 
     <script>
@@ -546,21 +549,21 @@
            FULLSCREEN SLIDER LOGIC
            ========================================================================== */
         const fullSlidesData = [
-            "images_slide/slide1.png",
-            "images_slide/slide2.png",
-            "images_slide/slide3.png",
-            "images_slide/slide4.png",
-            "images_slide/slide5.png",
-            "images_slide/slide6.png",
-            "images_slide/slide7.png",
-            "images_slide/slide8.png",
-            "images_slide/slide9.png",
-            "images_slide/slide10.png",
-            "images_slide/slide11.png",
-            "images_slide/slide12.png",
-            "images_slide/slide13.png",
-            "images_slide/slide14.png",
-            "images_slide/slide15.png"
+            "images_slide/slide1.jpg",
+            "images_slide/slide2.jpg",
+            "images_slide/slide3.jpg",
+            "images_slide/slide4.jpg",
+            "images_slide/slide5.jpg",
+            "images_slide/slide6.jpg",
+            "images_slide/slide7.jpg",
+            "images_slide/slide8.jpg",
+            "images_slide/slide9.jpg",
+            "images_slide/slide10.jpg",
+            "images_slide/slide11.jpg",
+            "images_slide/slide12.jpg",
+            "images_slide/slide13.jpg",
+            "images_slide/slide14.jpg",
+            "images_slide/slide15.jpg"
         ];
         
         let currentFullSlide = 0;
@@ -587,6 +590,13 @@
         window.renderFullSlide = function() {
             const img = document.getElementById('fullSlideImage');
             img.style.opacity = 0;
+            
+            // Preload next image in background
+            if (currentFullSlide < fullSlidesData.length - 1) {
+                const preload = new Image();
+                preload.src = fullSlidesData[currentFullSlide + 1];
+            }
+            
             setTimeout(() => {
                 img.src = fullSlidesData[currentFullSlide];
                 img.onload = () => { img.style.opacity = 1; };
