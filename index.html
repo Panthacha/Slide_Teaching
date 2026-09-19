@@ -314,14 +314,14 @@
     <!-- FULLSCREEN IMAGE SLIDER -->
     <div id="fullScreenSlider" class="hidden fixed inset-0 z-[100] bg-black flex items-center justify-center">
         <!-- Close Button -->
-        <button onclick="closeFullScreenSlider()" class="absolute top-4 right-4 text-white text-3xl font-bold bg-white/20 w-12 h-12 rounded-full hover:bg-red-500 z-10 transition-colors flex items-center justify-center cursor-pointer border border-white/30 shadow-lg">✕</button>
+        <button onclick="closeFullScreenSlider()" class="absolute top-4 right-4 text-white text-3xl font-bold bg-white/20 w-12 h-12 rounded-full hover:bg-red-500 z-50 transition-colors flex items-center justify-center cursor-pointer border border-white/30 shadow-lg">✕</button>
         
         <!-- Navigation Buttons -->
-        <button onclick="prevFullSlide(event)" class="absolute left-4 text-white text-6xl font-bold bg-white/10 w-20 h-20 rounded-full hover:bg-white/30 z-10 select-none flex items-center justify-center pb-2 transition-colors cursor-pointer border border-white/20 shadow-lg">‹</button>
-        <button onclick="nextFullSlide(event)" class="absolute right-4 text-white text-6xl font-bold bg-white/10 w-20 h-20 rounded-full hover:bg-white/30 z-10 select-none flex items-center justify-center pb-2 transition-colors cursor-pointer border border-white/20 shadow-lg">›</button>
+        <button onclick="prevFullSlide(event)" class="absolute left-4 text-white text-6xl font-bold bg-white/10 w-20 h-20 rounded-full hover:bg-white/30 z-50 select-none flex items-center justify-center pb-2 transition-colors cursor-pointer border border-white/20 shadow-lg">‹</button>
+        <button onclick="nextFullSlide(event)" class="absolute right-4 text-white text-6xl font-bold bg-white/10 w-20 h-20 rounded-full hover:bg-white/30 z-50 select-none flex items-center justify-center pb-2 transition-colors cursor-pointer border border-white/20 shadow-lg">›</button>
         
         <!-- Slide Progress -->
-        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/90 font-pixel-body text-lg bg-white/20 px-6 py-2 rounded-full z-10 font-bold border border-white/30 shadow-lg" id="fullSlideCounter">1 / 15</div>
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/90 font-pixel-body text-lg bg-white/20 px-6 py-2 rounded-full z-50 font-bold border border-white/30 shadow-lg" id="fullSlideCounter">1 / 15</div>
 
         <!-- Current Image -->
         <div class="absolute inset-0 flex items-center justify-center z-0">
